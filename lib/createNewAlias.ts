@@ -5,7 +5,7 @@ import { AliasProp } from "@/types/AliasProp";
 export default async function createNewAlias(
     url: string,
     alias: string,
-): Promise<AliasProp> {
+): Promise<AliasProp | Error> {
     console.log("Creating new alias");
 
     try {
@@ -18,7 +18,7 @@ export default async function createNewAlias(
 
     const oldAlias = await urlCollection.findOne({ alias });
     if (oldAlias) {
-        throw new Error("Alias already exists");
+       return new Error("Alias already exists");
     }
 
     const p = {
