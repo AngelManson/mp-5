@@ -17,23 +17,29 @@ export default function Home() {
         event.preventDefault();
         setError("");
         setNewUrl("");
-        try{
-            const res = await createNewAlias(url, alias);
+        const res = await createNewAlias(url, alias);
+
+        if ("error" in res) {
+            setError(res["error"]);
+        } else {
+
             const resURL = `${window.location.origin}/${res.alias}`;
 
             if (encodeURIComponent(res.alias) !== res.alias) {
                 setError("Invalid alias: You may only use valid URL characters");
-            }
-
-            setNewUrl(resURL);
-        }catch(err) {
-            if (err instanceof Error) {
-                setError(err.message);
             } else {
-                setError("Unable to create new alias");
+                try {
+                    await fetch(resURL);
+                    setNewUrl(resURL);
+                } catch (err) {
+                    if (err instanceof Error) {
+                        setError(err.message);
+                    } else {
+                        setError("Unable to create new alias");
+                    }
+                }
             }
         }
-
         // createNewAlias(url, alias)
         //     .then((newAlias) => append(newAlias))
         //     .catch((err) => console.error(err));

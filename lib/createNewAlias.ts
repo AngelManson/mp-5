@@ -5,20 +5,20 @@ import { AliasProp } from "@/types/AliasProp";
 export default async function createNewAlias(
     url: string,
     alias: string,
-): Promise<AliasProp | Error> {
+): Promise<AliasProp | { error: string }> {
     console.log("Creating new alias");
 
     try {
         const validation = await fetch(url);
     } catch (err) {
-        throw new Error("Invalid url");
+        return {error:"Invalid url"};
     }
 
     const urlCollection = await getCollection(URL_COLLECTION);
 
     const oldAlias = await urlCollection.findOne({ alias });
     if (oldAlias) {
-       return new Error("Alias already exists");
+       return {error: "Alias already exists"};
     }
 
     const p = {
@@ -29,7 +29,7 @@ export default async function createNewAlias(
     const res = await urlCollection.insertOne({...p});
 
     if (!res.acknowledged){
-        throw new Error("DB insert failed");
+        return {error: "DB insert failed"};
     }
 
     //get id from DB (also next week)
