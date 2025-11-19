@@ -17,19 +17,23 @@ export default function Home() {
         event.preventDefault();
         setError("");
         setNewUrl("");
-        const res = await createNewAlias(url, alias);
+        try {
+            const res = await createNewAlias(url, alias);
 
-        if ("error" in res) {
-            setError(res["error"]);
-        } else {
-
-            const resURL = `${window.location.origin}/${res.alias}`;
-
-            if (encodeURIComponent(res.alias) !== res.alias) {
-                setError("Invalid alias: You may only use valid URL characters");
+            if ("error" in res) {
+                setError(res["error"]);
             } else {
-                setNewUrl(resURL);
+
+                const resURL = `${window.location.origin}/${res.alias}`;
+
+                if (encodeURIComponent(res.alias) !== res.alias) {
+                    setError("Invalid alias: You may only use valid URL characters");
+                } else {
+                    setNewUrl(resURL);
+                }
             }
+        } catch (error) {
+            setError("Something went wrong");
         }
         // createNewAlias(url, alias)
         //     .then((newAlias) => append(newAlias))
