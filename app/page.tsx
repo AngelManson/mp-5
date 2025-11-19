@@ -1,7 +1,7 @@
 "use client";
 // import {Textarea} from "@mui/joy";
 import {Button, FormHelperText, TextField} from "@mui/material";
-import {useState} from "react";
+import {FormEvent, useState} from "react";
 // import {AliasProp} from "@/types/AliasProp";
 import createNewAlias from "@/lib/createNewAlias";
 import Header from "@/components/Header";
@@ -13,7 +13,7 @@ export default function Home() {
     const [newUrl, setNewUrl] = useState("");
     const [error, setError] = useState("");
 
-    async function handleSubmit(event) {
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setError("");
         setNewUrl("");
@@ -27,7 +27,11 @@ export default function Home() {
 
             setNewUrl(resURL);
         }catch(err) {
-            setError(err.message || "Unable to create new alias");
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Unable to create new alias");
+            }
         }
 
         // createNewAlias(url, alias)
