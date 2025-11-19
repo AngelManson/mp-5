@@ -28,16 +28,7 @@ export default function Home() {
             if (encodeURIComponent(res.alias) !== res.alias) {
                 setError("Invalid alias: You may only use valid URL characters");
             } else {
-                try {
-                    await fetch(resURL);
-                    setNewUrl(resURL);
-                } catch (err) {
-                    if (err instanceof Error) {
-                        setError(err.message);
-                    } else {
-                        setError("Unable to create new alias");
-                    }
-                }
+                setNewUrl(resURL);
             }
         }
         // createNewAlias(url, alias)
